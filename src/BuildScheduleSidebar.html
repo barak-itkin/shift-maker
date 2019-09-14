@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <script type="text/javascript">
+    function getRangeInto(dest) {
+      function setValue(value) {
+        if (typeof dest == 'string')
+          dest = document.getElementById(dest);
+        dest.value = value;
+      }
+      google.script.run.withSuccessHandler(setValue).getActiveRangeA1Notation();
+    }
+    
+    function doBuildSchedule() {
+      google.script.run.buildScheduleSidebarCallback(
+        document.getElementById('source-range').value,
+        document.getElementById('start-time').value,
+        document.getElementById('rooms-range').value,
+        document.getElementById('filters').value,
+        document.getElementById('text-header').value,
+        document.getElementById('start-header').value,
+        document.getElementById('length-header').value,
+        document.getElementById('room-header').value,
+        document.getElementById('dest-range').value,
+      );
+    }
+    </script>
+    <!-- https://developers.google.com/gsuite/add-ons/guides/css -->
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="block form-group">
+        <label for="source-range">Source Range:</label>
+        <input type="text" name="source-range" id="source-range" />
+        <input type="button" value="Get" onclick="getRangeInto('source-range')">
+      </div>
+  
+      <div class="block form-group">
+        <label for="start-time">Start time:</label>
+        <input type="text" name="start-time" id="start-time" value="10:00" />
+      </div>
+      
+      <div class="block form-group">
+        <label for="rooms-range">Rooms Range:</label>
+        <input type="text" name="rooms-range" id="rooms-range" />
+        <input type="button" value="Get" onclick="getRangeInto('rooms-range')">
+      </div>
+      
+      <div class="block form-group">
+        <label for="filters">Filters:</label>
+        <textarea dir="rtl" rows="4" name="filters" id="filters">{
+  "יום": "שלישי 15.10"
+}</textarea>
+      </div>
+      
+      <div class="block form-group">
+        <label for="text-header">Text Column Header:</label>
+        <input type="text" name="text-header" id="text-header" value="שם האירוע" />
+      </div>
+      
+      <div class="block form-group">
+        <label for="start-header">Start Column Header:</label>
+        <input type="text" name="start-header" id="start-header" value="שעת התחלה" />
+      </div>
+      
+      <div class="block form-group">
+        <label for="length-header">Length Column Header:</label>
+        <input type="text" name="length-header" id="length-header" value="אורך בסלוטים" />
+      </div>
+      
+      <div class="block form-group">
+        <label for="room-header">Room Column Header:</label>
+        <input type="text" name="room-header" id="room-header" value="אולם" />
+      </div>
+      
+      <div class="block form-group">
+        <label for="dest-range">Destination range:</label>
+        <input type="text" name="dest-range" id="dest-range" />
+        <input type="button" value="Get" onclick="getRangeInto('dest-range')">
+      </div>
+      
+      <div class="block form-group">
+        <input type="button" class="action" value="Run" onclick="doBuildSchedule()" />
+        <input type="button" value="Cancel" onclick="google.script.host.close()" />
+      </div>
+      
+      <h2>Documentation</h2>
+      <h3>tl;dr</h3>
+      <p>Given a list of events (with room, start time, length and text), construct a schedule
+      table (merging cells and placing all events in the right places). Events can further be
+      filtered down by specifying the required values for some columns (such as the day).</p>
+    </div>
+  </body>
+</html>

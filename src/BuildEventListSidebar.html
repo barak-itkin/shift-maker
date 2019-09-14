@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <script type="text/javascript">
+    function getRangeInto(dest) {
+      function setValue(value) {
+        if (typeof dest == 'string')
+          dest = document.getElementById(dest);
+        dest.value = value;
+      }
+      google.script.run.withSuccessHandler(setValue).getActiveRangeA1Notation();
+    }
+    
+    function addRangeInto(dest) {
+      function setText(value) {
+        if (typeof dest == 'string')
+          dest = document.getElementById(dest);
+        dest.value += '"' + value + '"';
+      }
+      google.script.run.withSuccessHandler(setText).getActiveRangeA1Notation();
+    }
+    
+    function doBuildSchedule() {
+      saveProperties();
+      google.script.run.buildEventListSidebarCallback(
+        document.getElementById('source-ranges').value,
+        document.getElementById('name-header').value,
+        document.getElementById('column-header').value,
+        document.getElementById('row-header').value,
+        document.getElementById('length-header').value,
+        document.getElementById('content-header').value,
+        document.getElementById('dest-range').value,
+      );
+    }
+    </script>
+    <!-- https://developers.google.com/gsuite/add-ons/guides/css -->
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+  </head>
+  <body onready="loadProperties()">
+    <div class="sidebar">
+      <div class="block form-group">
+        <label for="source-ranges">Source Range:</label>
+        <textarea dir="rtl" rows="4" name="source-ranges" id="source-ranges">{"יום שלישי": ...}</textarea>
+        <input type="button" value="Get" onclick="addRangeInto('source-ranges')">
+      </div>
+  
+      <div class="block form-group">
+        <label for="name-header">Name Header:</label>
+        <input type="text" name="name-header" id="name-header" value="יום" />
+      </div>
+    
+      <div class="block form-group">
+        <label for="column-header">Column Header:</label>
+        <input type="text" name="column-header" id="column-header" value="אולם" />
+      </div>
+      
+      <div class="block form-group">
+        <label for="row-header">Row Header:</label>
+        <input type="text" name="row-header" id="row-header" value="שעת התחלה" />
+      </div>
+      
+      <div class="block form-group">
+        <label for="length-header">Length Header:</label>
+        <input type="text" name="length-header" id="length-header" value="אורך בסלוטים" />
+      </div>
+            
+      <div class="block form-group">
+        <label for="content-header">Content Header:</label>
+        <input type="text" name="content-header" id="content-header" value="שם האירוע" />
+      </div>
+      
+      <div class="block form-group">
+        <label for="dest-range">Destination range:</label>
+        <input type="text" name="dest-range" id="dest-range" />
+        <input type="button" value="Get" onclick="getRangeInto('dest-range')">
+      </div>
+      
+      <div class="block form-group">
+        <input type="button" class="action" value="Run" onclick="doBuildSchedule()" />
+        <input type="button" value="Cancel" onclick="google.script.host.close()" />
+      </div>
+      
+      <h2>Documentation</h2>
+      <h3>tl;dr</h3>
+      <p>Given one or more schedules tables of events (with merged cells, and row/column headers),
+      construct a list of events (with room, start time, length and text). Multiple schedule tables
+      can be specified by adding the "name" of each schedule, that will be added as another column.</p>
+    </div>
+  </body>
+</html>

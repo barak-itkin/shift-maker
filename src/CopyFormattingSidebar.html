@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <script type="text/javascript">
+    function getRangeInto(dest) {
+      function setValue(value) {
+        if (typeof dest == 'string')
+          dest = document.getElementById(dest);
+        dest.value = value;
+      }
+      google.script.run.withSuccessHandler(setValue).getActiveRangeA1Notation();
+    }
+    
+    function doCopyFormatting() {
+      google.script.run.copyFormattingSidebarCallback(
+        document.getElementById('source-range').value,
+        document.getElementById('dest-range').value,
+      );
+    }
+    </script>
+    <!-- https://developers.google.com/gsuite/add-ons/guides/css -->
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="block form-group">
+        <label for="source-range">Source Range:</label>
+        <input type="text" name="source-range" id="source-range" />
+        <input type="button" value="Get" onclick="getRangeInto('source-range')">
+      </div>
+  
+      <div class="block form-group">
+        <label for="dest-range">Destination Range:</label>
+        <input type="text" name="dest-range" id="dest-range" />
+        <input type="button" value="Get" onclick="getRangeInto('dest-range')">
+      </div>
+      
+      <div class="block form-group">
+        <input type="button" class="action" value="Run" onclick="doCopyFormatting()" />
+        <input type="button" value="Cancel" onclick="google.script.host.close()" />
+      </div>
+      
+      <h2>Documentation</h2>
+      <h3>tl;dr</h3>
+      <p>Copy the colors (text and background) from a range of cells to another range of cells,
+      as conditional formatting - every cell in the destination that ends with a text like a
+      cell in the source, will have the same colors.</p>
+      
+      <h3>Example usage</h3>
+      <p>Create a list of names of people, and color the cell of each person with it's own color.
+      Use that as the source range to color a new destination range, whenever a cell ends with
+      the name of that person!</p>  
+    </div>
+  </body>
+</html>
