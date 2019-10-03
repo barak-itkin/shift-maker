@@ -1,2 +1,3 @@
 # Shift maker - Google Sheets Add-On
-A bunch of utilities to mange shift assignments and schedules in Google sheets
+
+See full documentation [here](https://barak-itkin.github.io/shift-maker/)
