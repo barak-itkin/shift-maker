@@ -39,7 +39,7 @@ function buildEventList(
       }
     }
   }
-  
+
   var destSheet = destRange.getSheet();
   destRange = destSheet.getRange(
     destRange.getRow(), destRange.getColumn(), result.length, result[0].length
@@ -54,20 +54,60 @@ function buildEventListSidebarCallback(
   destRange
 )
 {
-  dataRanges = JSON.parse(dataRanges);
+  try {
+    dataRanges = JSON.parse(dataRanges);
+  } catch(e) {
+    SpreadsheetApp.getUi().alert(
+      "ERROR: Failed parsing the JSON of the data ranges: " + e.message
+    );
+    return;
+  }
+
+  if (dataRanges.constructor != ({}).constructor) {
+    SpreadsheetApp.getUi().alert(
+      "ERROR: The JSON of the data ranges is not an object, it's a " + (typeof dataRanges)
+    );
+    return;
+  }
+
   var realDataRanges = {};
   for (var name in dataRanges) {
-    realDataRanges[name] = SpreadsheetApp.getActive().getRange(dataRanges[name]);
+    try {
+      realDataRanges[name] = SpreadsheetApp.getActive().getRange(dataRanges[name]);
+    } catch(e) {
+      SpreadsheetApp.getUi().alert(
+        "ERROR: Failed getting the data range for " + JSON.stringify(name)
+      + " (which is " + JSON.stringify(dataRanges[name]) + ")"
+      );
+      return;
+    }
   }
-  buildEventList(
-    realDataRanges,
-    nameHeader,
-    colHeader,
-    rowHeader,
-    lengthHeader,
-    contentHeader,
-    SpreadsheetApp.getActive().getRange(destRange)
-  );
+
+  try {
+    var destRangeObj = SpreadsheetApp.getActive().getRange(destRange);
+  } catch(e) {
+      SpreadsheetApp.getUi().alert(
+        "ERROR: Failed getting the destination range (" + JSON.stringify(destRange) + ")"
+      );
+      return;
+  }
+
+  try {
+    buildEventList(
+      realDataRanges,
+      nameHeader,
+      colHeader,
+      rowHeader,
+      lengthHeader,
+      contentHeader,
+      destRangeObj
+    );
+  } catch(e) {
+      SpreadsheetApp.getUi().alert(
+        "ERROR: Failed building an event list: " + e.message
+      );
+      return;
+  }
 }
 
 function buildEventListSidebar() {

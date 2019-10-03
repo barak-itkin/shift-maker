@@ -32,14 +32,36 @@ function copyFormattingSidebar() {
 }
 
 function copyFormattingSidebarCallback(source, dest) {
-  var sourceRange = SpreadsheetApp.getActive().getRange(source);
-  var destRange = SpreadsheetApp.getActive().getRange(dest);
+  try {
+    var sourceRange = SpreadsheetApp.getActive().getRange(source);
+  } catch(e) {
+      SpreadsheetApp.getUi().alert(
+        "ERROR: Failed getting the source range (" + JSON.stringify(source) + ")"
+      );
+      return;
+  }
+
+  try {
+    var destRange = SpreadsheetApp.getActive().getRange(dest);
+  } catch(e) {
+      SpreadsheetApp.getUi().alert(
+        "ERROR: Failed getting the destination range (" + JSON.stringify(dest) + ")"
+      );
+      return;
+  }
 
   function ruleConditionSetter(ruleBuilder, value) {
     return ruleBuilder.whenTextContains(value)
   }
-  
-  copyFormatting(
-    sourceRange, destRange, ruleConditionSetter
-  );  
+
+  try {
+    copyFormatting(
+      sourceRange, destRange, ruleConditionSetter
+    );
+  } catch(e) {
+      SpreadsheetApp.getUi().alert(
+        "ERROR: Failed copying the formatting: " + e.message
+      );
+      return;
+  }
 }
