@@ -36,7 +36,7 @@ function copyFormattingSidebarCallback(source, dest) {
   var destRange = SpreadsheetApp.getActive().getRange(dest);
 
   function ruleConditionSetter(ruleBuilder, value) {
-    return ruleBuilder.whenTextEndsWith(value)
+    return ruleBuilder.whenTextContains(value)
   }
   
   copyFormatting(
