@@ -1,7 +1,7 @@
 title: Shift Maker
 description: >-
   Convert shift schedule tables to event lists and vice versa, with custom coloring for different people.
-baseurl: ""
+baseurl: "shift-maker/"
 url: ""
 
 # Build settings
